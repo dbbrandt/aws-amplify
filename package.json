@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@aws-amplify/api": "^2.1.5",
+    "@aws-amplify/auth": "^2.1.5",
+    "@aws-amplify/core": "^2.2.4",
     "@aws-amplify/pubsub": "^2.1.5",
     "aws-amplify": "^2.2.4",
     "aws-amplify-react-native": "^3.2.2",
