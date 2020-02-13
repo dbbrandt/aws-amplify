@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import Amplify from '@aws-amplify/core';
-import Auth from '@aws-amplify/auth';
+import Amplify, { Auth, Analytics } from 'aws-amplify';
 import amplify from '../aws-exports.js';
 Amplify.configure(amplify);
+Analytics.disable();
 import { withAuthenticator } from 'aws-amplify-react-native';
 
 class Main extends Component {
