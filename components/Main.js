@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import Amplify, { Auth, Analytics } from 'aws-amplify';
+import { StyleSheet, Text, View, TouchableOpacity, Button, TextInput} from 'react-native';
+import Amplify, { Auth, Analytics, API } from 'aws-amplify';
 import amplify from '../aws-exports.js';
 Amplify.configure(amplify);
 Analytics.disable();
@@ -8,7 +8,10 @@ import { withAuthenticator } from 'aws-amplify-react-native';
 
 class Main extends Component {
   state = {
-    signedIn: false
+    signedIn: false,
+    apiResponse: null,
+    apiError: null,
+    url: null
   };
 
   handleSubmit = () => {
@@ -18,16 +21,34 @@ class Main extends Component {
         this.setState({signedIn: false});
         this.props.rerender();
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+      });
   };
+  async getSample() {
+    const url = this.state.url;
+    const path = url; // you can specify the path
+    try {
+      const apiResponse = await API.get("testListApi", path); //replace the API name
+      this.setState({apiResponse, apiError: null});
+      console.log('response:' + apiResponse);
+    } catch(err) {
+      this.setState({apiError: err});
+      console.log('error response:' + err);
+    }
+  }
 
   componentDidMount() {
     console.log('Main Did Mount: Auth state: ', this.props.authState);
     this.setState({signedIn: true});
   }
 
+  onChange = (text) => {
+    this.setState({url: text})
+  };
+
   render() {
-    const { signedIn } = this.state;
+    const { signedIn, url } = this.state;
     console.log('Rendering.....');
     return (
       <View style={styles.container}>
@@ -35,6 +56,17 @@ class Main extends Component {
         <TouchableOpacity onPress={this.handleSubmit}>
           <Text>{signedIn ? "LOGOUT" : "LOGIN"}</Text>
         </TouchableOpacity>
+        <View>
+          <TextInput
+            placeholder="Input Url ex. /items/..."
+            value={url}
+            onChangeText={text => this.onChange(text)}
+          />
+          <Button title="Send Request" onPress={this.getSample.bind(this)} />
+          <Text>Success: {this.state.apiResponse && JSON.stringify(this.state.apiResponse.success)}</Text>
+          <Text>Error: {this.state.apiError && JSON.stringify(this.state.apiError.message)}</Text>
+          <Text>Params: {this.state.apiResponse && JSON.stringify(this.state.apiResponse.params)}</Text>
+        </View>
       </View>
     );
   }
