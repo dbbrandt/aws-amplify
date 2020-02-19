@@ -31,7 +31,7 @@ class Main extends Component {
     try {
       const apiResponse = await API.get("testListApi", path); //replace the API name
       this.setState({apiResponse, apiError: null});
-      console.log('response:' + apiResponse);
+      console.log('response:', apiResponse);
     } catch(err) {
       this.setState({apiError: err});
       console.log('error response:' + err);
@@ -66,6 +66,7 @@ class Main extends Component {
           <Text>Success: {this.state.apiResponse && JSON.stringify(this.state.apiResponse.success)}</Text>
           <Text>Error: {this.state.apiError && JSON.stringify(this.state.apiError.message)}</Text>
           <Text>Params: {this.state.apiResponse && JSON.stringify(this.state.apiResponse.params)}</Text>
+          <Text>Query: {this.state.apiResponse && JSON.stringify(this.state.apiResponse.query)}</Text>
         </View>
       </View>
     );
