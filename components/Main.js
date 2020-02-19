@@ -33,7 +33,7 @@ class Main extends Component {
       this.setState({apiResponse, apiError: null});
       console.log('response:', apiResponse);
     } catch(err) {
-      this.setState({apiError: err});
+      this.setState({apiError: err, apiResponse: null});
       console.log('error response:' + err);
     }
   }
@@ -63,10 +63,16 @@ class Main extends Component {
             onChangeText={text => this.onChange(text)}
           />
           <Button title="Send Request" onPress={this.getSample.bind(this)} />
-          <Text>Success: {this.state.apiResponse && JSON.stringify(this.state.apiResponse.success)}</Text>
-          <Text>Error: {this.state.apiError && JSON.stringify(this.state.apiError.message)}</Text>
-          <Text>Params: {this.state.apiResponse && JSON.stringify(this.state.apiResponse.params)}</Text>
-          <Text>Query: {this.state.apiResponse && JSON.stringify(this.state.apiResponse.query)}</Text>
+          {this.state.apiResponse &&
+            <View>
+              <Text>Success: {this.state.apiResponse && JSON.stringify(this.state.apiResponse.success)}</Text>
+              <Text>Params: {this.state.apiResponse && JSON.stringify(this.state.apiResponse.params)}</Text>
+              <Text>Query: {this.state.apiResponse && JSON.stringify(this.state.apiResponse.query)}</Text>
+            </View>
+           }
+          {this.state.apiError &&
+            <Text>Error: {this.state.apiError && JSON.stringify(this.state.apiError.message)}</Text>
+          }
         </View>
       </View>
     );
